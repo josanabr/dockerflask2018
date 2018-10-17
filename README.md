@@ -74,3 +74,15 @@ curl -i http://localhost:5000
 ```
 
 Ahora se tiene un servidor web que responde con `hola mundo`.
+
+---
+
+Se ha modificado el archivo [gtd.py](gtd.py).
+En esta modificacion se ha creado una lista donde cada nodo de la lista es un diccionario.
+Asi mismo se define un nuevo metodo llamado `get_tasks` el cual puede ser accedido a traves del URL [http://localhost:5000/todo/api/v1.0/tasks](http://localhost:5000/todo/api/v1.0/tasks).
+
+Usando el comando `curl` tenemos acceso a este nuevo metodo:
+
+```
+curl -i http://localhost:5000/todo/api/v1.0/tasks
+```
