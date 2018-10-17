@@ -162,3 +162,17 @@ Devuelve una lista.
 De esa lista respuesta se toma la primera posicion.
 
 En caso que no se encuentre la tarea con el `task_id` se retornara un valor de no encontrado `404`.
+
+## Ejecucion del contenedor
+
+Para ejecutar el contenedor se ejecuta el comando
+
+```
+docker run --rm -it -p 5000:5000 -v $(pwd):/myhome josanabr/flask /bin/bash
+```
+
+## Accediendo a *web services* via curl
+
+* Trae todas las tareas `curl -i http://localhost:5000/todo/api/v1.0/tasks`
+* Trae una tarea en particular `curl -i http://localhost:5000/todo/api/v1.0/tasks/2`
+* Trae una tarea inexistente `curl -i http://localhost:5000/todo/api/v1.0/tasks/10`
