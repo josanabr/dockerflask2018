@@ -39,7 +39,7 @@ Deberia obtener el famoso `hola mundo`.
 
 Vamos a crear nuestro primer *web service*. 
 
-Observe que ahora nuestro archivo [gtd.py](gtd.py) ha cambiado:
+Observe que ahora nuestro archivo [`gtd.py`](gtd.py) ha cambiado:
 
 ```
 #!/usr/bin/python
@@ -56,7 +56,7 @@ if __name__ == '__main__':
 ```
 
 Para llevar a cabo un poco mas automatica la ejecucion de este contenedor tambien se alterara un poco la definicion de nuestro contenedor. 
-Aqui el nuevo `Dockerfile`.
+Aqui el nuevo [`Dockerfile`](Dockerfile).
 
 ```
 FROM ubuntu
