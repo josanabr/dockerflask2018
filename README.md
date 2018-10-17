@@ -7,6 +7,7 @@
 - [Creacion contenedor con Flask](#creacion-contenedor-con-flask)
 - [Exponiendo funciones de Python como Web Services](#exponiendo-funciones-de-python-como-web-services)
 - [Creando el primer *endpoint*](#creando-el-primer-endpoint)
+- [Recuperando un registro particular](#recuperando-un-registro-particular)
 
 ---
 
@@ -132,3 +133,32 @@ curl -i http://localhost:5000/todo/api/v1.0/tasks
 
 ---
 
+# Recuperando un registro particular
+
+Se va a definir un nuevo URI en el cual dado un numero entero el *web service* trae un registro.
+A continuacion se presenta el codigo en Python, [`gtd.py`](gtd.py).
+
+```
+@app.route('/todo/api/v1.0/tasks/<int:task_id>', methods=['GET'])
+def get_task(task_id):
+ task = [task for task in tasks if task['id'] == task_id]
+ if len(task) == 0:
+  abort(404)
+ return jsonify({'task': task[0]})
+```
+
+Observe que este nuevo metodo se llama `get_task` y recibe como argumento `task_id` el cual se asume sera un numero entero. 
+El decorador de este metodo (`@app.route('/todo/api/v1.0/tasks/<int:task_id>', methods=['GET'])`) nos dice que para acceder a este metodo via *web service* el URI es `/todo/api/v1.0/tasks/n` donde `n` debe ser un numero entero.
+
+Lo que hace este metodo es buscar por una tarea que tenga el `task_id` que se paso como argumento a la funcion `get_task`. 
+Si se encuentra, se entrega la version JSON de este valor (`return jsonify({'task': task[0]})`).
+La razon por la cual se entrega la posicion `0` es porque la instruccion
+
+```
+ task = [task for task in tasks if task['id'] == task_id]
+```
+
+Devuelve una lista. 
+De esa lista respuesta se toma la primera posicion.
+
+En caso que no se encuentre la tarea con el `task_id` se retornara un valor de no encontrado `404`.
