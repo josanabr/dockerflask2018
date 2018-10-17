@@ -72,3 +72,5 @@ Ejecute el comando:
 ```
 curl -i http://localhost:5000
 ```
+
+Ahora se tiene un servidor web que responde con `hola mundo`.
