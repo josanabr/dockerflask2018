@@ -1,5 +1,16 @@
 # Contenedor con Flask
 
+---
+
+# Tabla de Contenido
+
+- [Creacion contenedor con Flask](#creacion-contenedor-con-Flask)
+- [Exponiendo funciones de Python como Web Services](#exponiendo-funciones-de-python-como-web-services)
+
+---
+
+# Creacion contenedor con Flask
+
 Inicialmente, se aprovisionara un contenedor con Flask. 
 
 ```
@@ -24,9 +35,11 @@ Deberia obtener el famoso `hola mundo`.
 
 ---
 
+# Exponiendo funciones de Python como Web Services
+
 Vamos a crear nuestro primer *web service*. 
 
-Observe que ahora nuestro archivo [gtd.py](gtd.py) ha cambiado:
+Observe que ahora nuestro archivo [`gtd.py`](gtd.py) ha cambiado:
 
 ```
 #!/usr/bin/python
@@ -43,7 +56,7 @@ if __name__ == '__main__':
 ```
 
 Para llevar a cabo un poco mas automatica la ejecucion de este contenedor tambien se alterara un poco la definicion de nuestro contenedor. 
-Aqui el nuevo `Dockerfile`.
+Aqui el nuevo [`Dockerfile`](Dockerfile).
 
 ```
 FROM ubuntu
@@ -75,14 +88,3 @@ curl -i http://localhost:5000
 
 Ahora se tiene un servidor web que responde con `hola mundo`.
 
----
-
-Se ha modificado el archivo [gtd.py](gtd.py).
-En esta modificacion se ha creado una lista donde cada nodo de la lista es un diccionario.
-Asi mismo se define un nuevo metodo llamado `get_tasks` el cual puede ser accedido a traves del URL [http://localhost:5000/todo/api/v1.0/tasks](http://localhost:5000/todo/api/v1.0/tasks).
-
-Usando el comando `curl` tenemos acceso a este nuevo metodo:
-
-```
-curl -i http://localhost:5000/todo/api/v1.0/tasks
-```
