@@ -8,6 +8,7 @@
 - [Exponiendo funciones de Python como Web Services](#exponiendo-funciones-de-python-como-web-services)
 - [Creando el primer *endpoint*](#creando-el-primer-endpoint)
 - [Recuperando un registro particular](#recuperando-un-registro-particular)
+- [Mensajes de error en formato JSON](#mensajes-de-error-en-formato-json)
 
 ---
 
@@ -176,3 +177,33 @@ docker run --rm -it -p 5000:5000 -v $(pwd):/myhome josanabr/flask /bin/bash
 * Trae todas las tareas `curl -i http://localhost:5000/todo/api/v1.0/tasks`
 * Trae una tarea en particular `curl -i http://localhost:5000/todo/api/v1.0/tasks/2`
 * Trae una tarea inexistente `curl -i http://localhost:5000/todo/api/v1.0/tasks/10`
+
+---
+
+# Mensajes de error en formato JSON
+
+Una buena practica a la hora de desarrollar *web services* es que la forma como exponen sus resultados y sus errores sea a traves del formato JSON. 
+Al codigo [`gtd.py`](gtd.py) se adiciono las siguientes instrucciones:
+
+```
+@app.errorhandler(404)
+def not_found(error):
+ return make_response(jsonify({'error': 'Not found'}), 404)
+```
+
+Una vez se incorporen estos cambios ejecute el contenedor.
+Una vez en el contenedor, ejecute `python3 gtd.py`. 
+En otra terminal ejecute el siguiente comando `curl -i http://localhost:5000/todo/api/v1.0/tasks/10`.
+Usted deberia ver algo como esto:
+
+> HTTP/1.0 404 NOT FOUND
+> Content-Type: application/json
+> Content-Length: 27
+> Server: Werkzeug/0.14.1 Python/3.6.6
+> Date: Wed, 17 Oct 2018 21:32:13 GMT
+> 
+> {
+>   "error": "Not found"
+> }
+
+Observe que el error sale ahora en formato JSON.
