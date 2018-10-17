@@ -4,8 +4,9 @@
 
 # Tabla de Contenido
 
-- [Creacion contenedor con Flask](#creacion-contenedor-con-Flask)
+- [Creacion contenedor con Flask](#creacion-contenedor-con-flask)
 - [Exponiendo funciones de Python como Web Services](#exponiendo-funciones-de-python-como-web-services)
+- [Creando el primer *endpoint*](#creando-el-primer-endpoint)
 
 ---
 
@@ -87,4 +88,47 @@ curl -i http://localhost:5000
 ```
 
 Ahora se tiene un servidor web que responde con `hola mundo`.
+
+---
+
+# Creando el primer *endpoint*
+
+Se ha modificado el archivo [`gtd.py`](gtd.py).
+En esta modificacion se han adicionado dos elementos:
++ Se crea una lista donde cada nodo de la lista es un diccionario.
+
+```
+tasks = [
+ {
+  'id': 1,
+  'title': "Buy groceries",
+  'description': "Milk, cheese, pizaa",
+  'done': False
+ },
+ {
+  'id': 2,
+  'title': "Learn Python",
+  'description': "Need a good tutorial on the web",
+  'done': False
+ }
+]
+```
+
++ Se define un nuevo metodo llamado `get_tasks` el cual puede ser accedido a traves del URL [http://localhost:5000/todo/api/v1.0/tasks](http://localhost:5000/todo/api/v1.0/tasks).
+
+```
+@app.route('/todo/api/v1.0/tasks', methods=['GET'])
+def get_tasks():
+ return jsonify({'tasks': tasks})
+```
+
+Observe que el metodo en Python se llama `get_tasks` pero la forma como se accede a este metodo como web service es a traves del URI `/todo/api/v1.0/tasks`.
+
+Usando el comando `curl` tenemos acceso a este nuevo metodo:
+
+```
+curl -i http://localhost:5000/todo/api/v1.0/tasks
+```
+
+---
 
