@@ -1,5 +1,5 @@
 FROM ubuntu
-RUN apt-get update && apt-get -y install python3
-RUN apt-get -y install python3-pip
+RUN apt-get update
+RUN apt-get -y --fix-missing install python3-pip ; exit 0
 RUN pip3 install Flask
 EXPOSE 5000
