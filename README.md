@@ -9,6 +9,7 @@
 - [Creando el primer *endpoint*](#creando-el-primer-endpoint)
 - [Recuperando un registro particular](#recuperando-un-registro-particular)
 - [Mensajes de error en formato JSON](#mensajes-de-error-en-formato-json)
+- [Adicionando una tarea via POST](#adicionando-una-tarea-via-post)
 
 ---
 
@@ -207,3 +208,46 @@ Usted deberia ver algo como esto:
 > }
 
 Observe que el error sale ahora en formato JSON.
+
+---
+
+# Adicionando una tarea via POST
+
+Hasta ahora lo que se ha hecho es acceder a la lista de tareas que se encuentran almacenadas en memoria del *web service*. 
+En este punto lo que se va a hacer es ingresar una nueva tarea que se almacenara en la memoria del *web service*. 
+El metodo que permite esta funcionalidad es el siguiente:
+
+```
+@app.route('/todo/api/v1.0/tasks', methods=['POST'])
+def create_task():
+ if not request.json or not 'title' in request.json:
+  abort(400)
+ task = {
+  'id': tasks[-1]['id'] + 1,
+  'title': request.json['title'],
+  'description': request.json.get('description', ""),
+  'done': False
+ }
+ tasks.append(task)
+ return jsonify({'task': task}), 201
+```
+
+Observe que el URI para acceder a este servicio que crea una tarea es `/todo/api/v1.0/tasks`, el cual es similar al URI que hemos visto anteriormente.
+La gran diferencia es el metodo que se usa para acceder al *web service*, en este caso es el metodo `POST`. 
+
+Una vez el cliente hace un llamado `POST` al URI `/todo/api/v1.0/tasks` se invoca el metodo `create_task()`.
+Si la solicitud no es de tipo JSON se aborta la solicitud.
+De lo contrario, se crea una nueva tarea. 
+Se adiciona a la lista de tareas existentes y se retorna la tarea en formato JSON y con un codigo `201`, creado.
+
+Para probar el nuevo archivo,
+
+* Ejecutar el contenedor
+* Una vez en el contenedor ejecute el comando `python3 gtd.py`
+* Por fuera del contenedor ejecutar el siguiente comando
+
+```
+curl -i -H "Content-Type: application/json" -X POST -d '{"title": "read a book"}' http://localhost:5000/todo/api/v1.0/tasks
+```
+
+* Liste ahora las tareas que tiene almacenadas en memoria el `web service`
