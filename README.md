@@ -10,6 +10,8 @@
 - [Recuperando un registro particular](#recuperando-un-registro-particular)
 - [Mensajes de error en formato JSON](#mensajes-de-error-en-formato-json)
 - [Adicionando una tarea via POST](#adicionando-una-tarea-via-post)
+- [Actualizando y borrando tareas](#actualizando-y-borrando-tareas)
+- [Palabras finales](#palabras-finales)
 
 ---
 
@@ -251,3 +253,79 @@ curl -i -H "Content-Type: application/json" -X POST -d '{"title": "read a book"}
 ```
 
 * Liste ahora las tareas que tiene almacenadas en memoria el `web service`
+
+---
+
+# Actualizando y borrando tareas
+
+A continuacion se presentan dos metodos, un metodo que permite la actualizacion de los datos de una tarea y un metodo que permite borrar tareas.
+A continuacion se presenta la implementacion del metodo para actualizar los datos de una tarea:
+
+```
+@app.route('/todo/api/v1.0/tasks/<int:task_id>', methods=['PUT'])
+def update_task(task_id):
+    task = [task for task in tasks if task['id'] == task_id]
+    if len(task) == 0:
+        abort(404)
+    if not request.json:
+        abort(400)
+    if 'title' in request.json and type(request.json['title']) != unicode:
+        abort(400)
+    if 'description' in request.json and type(request.json['description']) is not unicode:
+        abort(400)
+    if 'done' in request.json and type(request.json['done']) is not bool:
+        abort(400)
+    task[0]['title'] = request.json.get('title', task[0]['title'])
+    task[0]['description'] = request.json.get('description', task[0]['description'])
+    task[0]['done'] = request.json.get('done', task[0]['done'])
+    return jsonify({'task': task[0]})
+```
+
+La funcion `delete_task`, como los anteriores, tiene un decorador que apunta al URI `/todo/api/v1.0/tasks/n` (donde `n` se espera sea un numero entero) pero esta vez usa el metodo `PUT` del protocolo HTTP. 
+Ademas de recibir el identificador de la tarea a actualizar, este metodo espera recibir un JSON donde se describiran que informacion sera la que se actualice. 
+Una vez se valida que todo esta en orden, se procede a actualizar la tarea que el usuario indico se debe actualizaar.
+
+Ahora, observemos la implementacion del *web service* que permite borrar una tarea. 
+
+```
+@app.route('/todo/api/v1.0/tasks/<int:task_id>', methods=['DELETE'])
+def delete_task(task_id):
+    task = [task for task in tasks if task['id'] == task_id]
+    if len(task) == 0:
+        abort(404)
+    tasks.remove(task[0])
+    return jsonify({'result': True})
+```
+
+Esta funcion en Python tiene el mismo URI (`/todo/api/v1.0/tasks/n`) pero el metodo del protocolo HTTP que usa es el `DELETE`.
+Lo que hace la funcion `delete_task` entonces es localizar la tarea y una vez encontrada la remueve de la lista. 
+
+## Interactuando con los nuevos metodos
+
+### Ejecucion de los *web services*
+
+* Arrancar el contenedor `docker run --rm -it -p 5000:5000 -v $(pwd):/myhome josanabr/flask /bin/bash` 
+* Una vez dentro del contenedor, ejecutar el comando `python3 gtd.py`
+
+### Accediendo a los *web services* via `curl`
+
+En esta oportunidad interactuaremos con los *web services* de dos formas, una para actualizar y otra para eliminar.
+Para actualizar se ejecuta lo siguiente:
+
+```
+curl -i -H "Content-Type: application/json" -X PUT -d '{"done":true}' http://localhost:5000/todo/api/v1.0/tasks/2
+```
+
+Ahora liste las tareas que estan en memoria para validar que se hizo el cambio del *status* de la tarea.
+
+Ahora se procedera con el borrado de tareas. 
+Digite usted mismo los comandos.
+
+---
+
+# Palabras finales
+
+* Observe que todos los *web services* que se definieron tenian el mismo URI, `/todo/api/v1.0/tasks`
+* A pesar de ser usado el mismo URI, el *web server* direcciona a una funcion en Python o a otra dependiendo del metodo HTTP que se haya escogido
+* A traves del comando `curl` es posible interactuar con *web services* y enviar informacion en formato JSON
+* Flask es un micro-framework que facilita enormemente el desarrollo de *web services*
