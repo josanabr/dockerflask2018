@@ -29,3 +29,9 @@ docker build -t josanabr/flask:1.0.1 .
 ```
 docker run --rm -d -p 5000:5000 josanabr/flask:1.0.1
 ```
+
+# Otra ejecucion
+
+```
+docker run --rm -it -p 5000:5000 -v $(pwd):/myhome --name flask josanabr/flask /bin/bash
+```
